@@ -142,25 +142,41 @@ class mSlider {
                 const listIndex = tempIndex.reduce((p,c)=> {
                     return p + c;
                 });
-                const arr = this.list.map(v=> {
-                    return parseInt(v.style.left) - (this.listWidth * Math.abs(listIndex));
+                const tempArr = this.list.map((v)=> {
+                    return parseInt(v.style.left);
+                });
+                const arr = tempArr.map((v, i)=> {
+                    return v - (this.listWidth * Math.abs(listIndex));
                 });
                 if(listIndex < 0){
+                    for (let i = 0; i < arr.length-1; i++) {
+                        if(index == Math.abs(listIndex)){
+                            if(i < index){
+                                arr[i] = arr[arr.length - 1] + (this.listWidth * (i+1));
+                            }
+                            arr[index] = 0;
+                        }
+                        if(arr[i] < 0 && index != Math.abs(listIndex)){
+                            const arrLeft = arr[i-1];
+                            arr[i] = arrLeft + this.listWidth;
+                        }
+                    }
+                }
+                if(listIndex > 0){
                     arr.map((v, i)=> {
-                        const maxArr = Math.max.apply(null, arr);
-                        this.list[i].style.left = v + 'px';
-                        if(v < 0){
-                            this.list[i].style.left = maxArr + (this.listWidth * (i+1)) + 'px';
+                        if(i >= index){
+                            arr[i] = this.listWidth * (i - index);
                         }
                     });
-                }else{
                     arr.map((v, i)=> {
-                        this.list[i].style.left = this.listWidth * (i - index) + 'px';
-                        if((i-index) < 0){
-                            this.list[i].style.left = this.listWidth * (listIndex + i+1) + 'px';
+                        if(i < index){
+                            arr[i] = Math.abs(arr[arr.length-1]) + (this.listWidth * (i+1));
                         }
                     });
                 }
+                arr.map((v, i)=> {
+                    this.list[i].style.left = v + 'px';
+                });
                 this.bullet();
             });
         })
