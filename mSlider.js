@@ -124,10 +124,52 @@ class mSlider {
             LeftClick();
         }, true);
     }
+    //bullet 아이콘 클릭이벤트
+    handleBulletClick(){
+        [].forEach.call(this.bulletIcon, (li, index)=> {
+            this.bulletIcon[index].addEventListener("click", ()=> {
+                const tempIndex = this.list.map((v, i)=> {
+                    let currentIndex = 0;
+                    if(this.list[i].style.left == '0px'){
+                        if(i - index < 0){
+                            currentIndex = i - index;
+                        }else{
+                            currentIndex = i - index;
+                        }
+                    }
+                    return currentIndex;
+                });
+                const listIndex = tempIndex.reduce((p,c)=> {
+                    return p + c;
+                });
+                const arr = this.list.map(v=> {
+                    return parseInt(v.style.left) - (this.listWidth * Math.abs(listIndex));
+                });
+                if(listIndex < 0){
+                    arr.map((v, i)=> {
+                        const maxArr = Math.max.apply(null, arr);
+                        this.list[i].style.left = v + 'px';
+                        if(v < 0){
+                            this.list[i].style.left = maxArr + (this.listWidth * (i+1)) + 'px';
+                        }
+                    });
+                }else{
+                    arr.map((v, i)=> {
+                        this.list[i].style.left = this.listWidth * (i - index) + 'px';
+                        if((i-index) < 0){
+                            this.list[i].style.left = this.listWidth * (listIndex + i+1) + 'px';
+                        }
+                    });
+                }
+                this.bullet();
+            });
+        })
+    }
     play(){
         this.init();
         this.handleRightClick();
         this.handleLeftClick();
+        this.handleBulletClick();
     }
 }
 
