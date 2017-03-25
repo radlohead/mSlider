@@ -66,8 +66,9 @@ a{
     content: '';
 }
 .prevBtn{
-
+    cursor: pointer;
 }
 .nextBtn{
     right:0;
+    cursor: pointer;
 }
